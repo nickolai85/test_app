@@ -1,0 +1,17 @@
+///////
+server test01
+```http://test01-venyoo.ru:11000/```
+
+NGINX_PORT=11000
+PHP_PORT=9011
+MYSQL_PORT=13311
+ADMINER_PORT=10021
+REDIS_PORT=6391
+BEANSTALKD_PORT=11311
+
+DB_DATABASE=venyoostats
+DB_USERNAME=venyoostats
+DB_PASSWORD=venyoostats
+
+```/var/www/venyoo-statistics/project```
+///////

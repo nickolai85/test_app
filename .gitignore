@@ -1,0 +1,20 @@
+# nodejs
+/frontend/node_modules/
+/frontend/npm-debug.log
+/frontend/yarn-error.log
+
+# project
+/frontend/dist/
+/frontend/env.js
+
+/backend/node_modules
+/backend/public/hot
+/backend/public/storage
+/backend/storage/*.key
+/backend/vendor
+/backend/.idea
+/backend/.env
+
+/.idea
+/ssh
+/misc

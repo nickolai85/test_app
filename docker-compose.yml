@@ -1,0 +1,71 @@
+version: '3.1'
+
+services:
+  web:
+   build: './nginx'
+   restart: always
+   ports:
+    - ${NGINX_PORT}:80
+   volumes:
+    - ${BACKEND_PATH_HOST}:${APP_PATH_CONTAINER}
+    - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    - ./log/nginx:/var/log/nginx
+   working_dir: ${APP_PATH_CONTAINER}
+   links:
+    - php
+
+  php:
+   build: './php'
+   ports:
+    - ${PHP_PORT}:9000
+   volumes:
+    - ${BACKEND_PATH_HOST}:${APP_PATH_CONTAINER}
+    - ${APP_SSH_FOLDER}:${APP_SSH_FOLDER_CONTAINER}
+    - ./php/php.ini:/usr/local/etc/php/conf.d/custom.ini
+    - ./log/php:/var/log/php-scripts.log
+   links:
+    - db
+    - redis
+    - beanstalkd
+   working_dir: ${APP_PATH_CONTAINER}
+
+  db:
+    build: './mysql'
+    restart: always
+    ports:
+     - ${MYSQL_PORT}:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: chat
+      MYSQL_USER: chat
+      MYSQL_PASSWORD: chat
+    volumes:
+     - ${DB_PATH_HOST}:/var/lib/mysql
+     - ./mysql/my.cnf:/etc/mysql/mysql.conf.d/config-file.cnf
+
+  node:
+    build: "./node"
+    working_dir: ${APP_PATH_CONTAINER}
+    volumes:
+     - ${FRONTEND_PATH_HOST}:${APP_PATH_CONTAINER}
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+     - ${ADMINER_PORT}:8080
+    links:
+     - db
+
+  redis:
+    image: redis:4.0
+    ports:
+      - ${REDIS_PORT}:6379
+    command: ["redis-server", "--bind", "redis", "--port", "6379"]
+
+  beanstalkd:
+    image: schickling/beanstalkd
+    ports:
+     - ${BEANSTALKD_PORT}:11300
+    volumes:
+     - ${FRONTEND_PATH_HOST}:${APP_PATH_CONTAINER}
