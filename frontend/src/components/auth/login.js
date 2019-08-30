@@ -36,21 +36,15 @@ export default class Login extends Component {
                 .post(
                     "http://localhost:10177/api/auth/login",
                     {
-
-                            "email":"jorik@mail.com",
+                            "email":"br@mail.com",
                             "password":"1234567",
                             "remember_me":true,
-                            "grant_type":"password",
-                            "client_id":2,
-                            "client_secret":"IyyVSQFfw8cdIHDBMImadounjmJo2RgRc2o3c0ut",
 
                     },
                     {headers:{
-                            "grant_type":"password",
-                            "client_id":2,
-                            "client_secret":"IyyVSQFfw8cdIHDBMImadounjmJo2RgRc2o3c0ut",
-                            "Content-Type": "application/json",
-                            "X-Requested-With": "XMLHttpRequest",
+
+                       //     "Content-Type": "application/json",
+                      //      "X-Requested-With": "XMLHttpRequest",
                         }
 
                     }
