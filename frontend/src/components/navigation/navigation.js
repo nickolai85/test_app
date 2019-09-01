@@ -1,34 +1,58 @@
-import React, { Component } from 'react';
+import React from "react";
+import axios from "axios";
+import { withRouter } from "react-router";
 import { NavLink } from "react-router-dom";
 
-export default class Navigation extends Component {
-  constructor(){
-    super();
-    this.state={
-      pageTitle: "Welcome to xZero",
-      navigation:[
-        {id:0 , title: 'Signin' , link:'/auth'},
-        {id:1 , title: 'Signup' , link:'/signup'}
-      ]
-    }
-    this.navlinks = this.navlinks.bind(this);
-  }
-  navlinks(){
-    return this.state.navigation.map(item =>{
-        return <NavLink key = {item.id} to = {item.link}>
-                 {item.title}
-              </NavLink>
+const NavigationComponent = props => {
+  const dynamicLink = (route, linkText) => {
+    return (
+      <div className="nav-link-wrapper">
+        <NavLink to={route} activeClassName="nav-link-active">
+          {linkText}
+        </NavLink>
+      </div>
+    );
+  };
+  const handleSignOut = () => {
+    let token = localStorage.getItem('token');
+    let data = {headers: {
+      Authorization:`Bearer ${token}`
+    }};
+    axios
+      .get("http://localhost:10177/api/auth/logout", data)
+      .then(response => {
+        console.log(response);
+        if (response.status === 200) {
+          localStorage.clear();
+          props.history.push("/");
+          props.handleSuccessfulLogout();
         }
-      )
-  }
-  render() {
-      return (
-          <div>
-             <NavLink exact to="/">
-                  Home
-             </NavLink>
-             {this.navlinks()}
-          </div>
-      );
-  }
-}
+        return response.data;
+      })
+      .catch(error => {
+        console.log("Error signing out", error);
+      });
+  };
+  return (
+    <div className="nav-wrapper">
+      <div className="left-side">
+        <div className="nav-link-wrapper">
+          <NavLink exact to="/" activeClassName="nav-link-active">
+            Home
+          </NavLink>
+        </div>
+
+      </div>
+
+      <div className="right-side">
+
+        <a onClick={handleSignOut}>
+          Logout
+          </a>
+        {props.loggedInStatus === "LOGGED_IN" ? (<a onClick={handleSignOut}>Sign Out</a>) : null}
+      </div>
+    </div>
+  );
+};
+
+export default withRouter(NavigationComponent);
