@@ -18,7 +18,8 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loggedInStatus: "NOT_LOGGED_IN"
+      loggedInStatus: "NOT_LOGGED_IN",
+      userdata:""
     };
 
     this.handleSuccessfulLogin = this.handleSuccessfulLogin.bind(this);
@@ -45,36 +46,34 @@ export default class App extends Component {
   checkLoginStatus() {
     
     let token = localStorage.getItem('token');
-    console.log(`Bearer ${token}`);
-   // console.log(token);
     let data = {headers: {
-      Authorization:`Bearer ${token}`
-    }};
-
+        Authorization:`Bearer ${token}`
+        }};
     return axios
-      .get("http://localhost:10177/api/auth/user",data
-      )
+      .get("http://localhost:10177/api/auth/user",data)
       .then(response => {
-
+        const loggedIn = response.data.loggedIn;
         console.log(response);
-        const loggedIn = response.data.logged_in;
         const loggedInStatus = this.state.loggedInStatus;
-
-        
         // If loggedIn and status LOGGED_IN => return data
         // If loggedIn status NOT_LOGGED_IN => update state
         // If not loggedIn and status LOGGED_IN => update state
-console.log('loggedIn',loggedIn);
-console.log('loggedInStatus',)
+        console.log('loggedIn',loggedIn);
+        console.log('loggedInStatus', loggedInStatus)
         if (loggedIn && loggedInStatus === "LOGGED_IN") {
+          console.log('cond1');
           return loggedIn;
         } else if (loggedIn && loggedInStatus === "NOT_LOGGED_IN") {
+          console.log('cond2');
           this.setState({
-            loggedInStatus: "LOGGED_IN"
+            loggedInStatus: "LOGGED_IN",
+            userdata: response.data
           });
         } else if (!loggedIn && loggedInStatus === "LOGGED_IN") {
+          console.log('cond3');
           this.setState({
-            loggedInStatus: "NOT_LOGGED_IN"
+            loggedInStatus: "NOT_LOGGED_IN",
+            userdata:''
           });
         }
       })
@@ -101,7 +100,11 @@ console.log('loggedInStatus',)
        <Router>
          <div>
            {/*this.navitems()*/}
-           <Navigation />
+           <Navigation 
+              loggedInStatus = {this.state.loggedInStatus}
+              handleSuccessfulLogout = {this.handleSuccessfulLogout}
+              userdata = {this.state.userdata}
+           />
            <Switch>
               <Route exact path = "/" component={Home} />
               <Route path = "/signup" component={Signup} />
