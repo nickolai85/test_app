@@ -97,4 +97,7 @@ class MessageChannelController extends Controller
         }
         return $images_url;
     }
+    public function test(){
+        return 'tat ii bat';
+    }
 }

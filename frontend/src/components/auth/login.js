@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-//import { OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRECT, LOGIN_URL } from '../../config/env';
+import { OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRECT, LOGIN_URL } from '../../config/env';
 import axios from 'axios'
 
 export default class Login extends Component {
@@ -20,46 +20,33 @@ export default class Login extends Component {
             errorText: ""
         });
     }
-/*    getPortfolioItems(){
-        axios.get('http://localhost:10177/test')
-            .then(response => {
-                console.log(response);
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }*/
-
-
-        handleSubmit(event) {
-            axios
-                .post(
-                    "http://localhost:10177/api/auth/login",
-                    {
-                            "email":"br@mail.com",
-                            "password":"1234567",
-                            "remember_me":true,
-
-                    },
-                    {headers:{
-
-                       //     "Content-Type": "application/json",
-                      //      "X-Requested-With": "XMLHttpRequest",
-                        }
-
-                    }
-
+    handleSubmit(event) {
+        axios
+            .post(
+                "http://localhost:10177/api/auth/login",
+                {
+                   // "email":"br@mail.com",
+                   // "password":"1234567",
+                   // "remember_me":true,
+                   email: this.state.email,
+                   password: this.state.password,
+                   "remember_me":true,                  
+                }
                 )
-                .then(response => {
-                    console.log(response);
-/*                    if (response.data.status === "created") {
+            .then(response => {   
+              if (response.statusText === "OK") {
+                        console.log('we are loget in');
                         this.props.handleSuccessfulAuth();
+                        localStorage.setItem('token', response.data.access_token);
+                        
                     } else {
+                        console.log('we are not');
                         this.setState({
+                            
                             errorText: "Wrong email or password"
                         });
                         this.props.handleUnsuccessfulAuth();
-                    }*/
+                    }
                 })
                 .catch(error => {
                     this.setState({
@@ -67,17 +54,11 @@ export default class Login extends Component {
                     });
 
                     console.log('pissets');
-                   // this.props.handleUnsuccessfulAuth();
+                    this.props.handleUnsuccessfulAuth();
                 });
 
             event.preventDefault();
         }
-
-/*    async handleSubmit(event) {
-        console.log('email',this.state.email);
-        console.log('psw',this.state.password);
-
-    }*/
     render() {
       //  this.getPortfolioItems();
         return (

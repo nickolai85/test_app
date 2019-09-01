@@ -94,7 +94,14 @@ class AuthController extends Controller
      * @return [json] user object
      */
     public function user(Request $request)
-    {
-        return response()->json($request->user());
+    {   $response = $request->user();
+        if ($response){
+            $response['loggedIn'] = "LOGGED_IN";
+        }
+        else {
+            $response['loggedIn'] = "NOT_LOGGED_IN";
+        }
+
+        return response()->json($response);
     }
 }
