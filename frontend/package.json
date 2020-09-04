@@ -58,7 +58,7 @@
     "laravel-echo": "^1.5.4",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
-    "node-sass": "^4.9.2",
+    "node-sass": "^4.13.1",
     "postcss-loader": "^2.1.6",
     "react": "16.8.0",
     "react-dom": "16.8.0",
